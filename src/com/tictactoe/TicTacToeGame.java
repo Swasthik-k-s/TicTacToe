@@ -7,6 +7,6 @@ public class TicTacToeGame {
 		CreateBoard game = new CreateBoard();
 		
 		game.userInput();
-		
+		game.showBoard();
 	}
 }

@@ -37,4 +37,24 @@ public class CreateBoard {
 		
 		System.out.println("Player = " + player + "\nComputer = " + computer);
 	}
+	
+	public void showBoard() {
+		for (int i = 1; i < board.length; i = i + 3) {
+			for (int j = 0; j < 3; j++) {
+				if (j == 1) {
+					System.out.print(" | " + board[i + j] + " | ");
+				} else if (j == 0) {
+					System.out.print(" " + board[i + j]);
+				} else {
+					System.out.print(board[i + j]);
+				}
+			}
+			if (i != 7) {
+				System.out.println("\n ----------");
+			} else {
+				System.out.println("\n");
+			}
+		}
+
+	}
 }
