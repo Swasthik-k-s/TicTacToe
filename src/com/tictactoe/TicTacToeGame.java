@@ -8,5 +8,6 @@ public class TicTacToeGame {
 		
 		game.userInput();
 		game.showBoard();
+		game.makeMove();
 	}
 }
