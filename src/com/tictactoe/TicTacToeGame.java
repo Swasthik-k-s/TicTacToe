@@ -3,6 +3,7 @@ package com.tictactoe;
 public class TicTacToeGame {
 
 	public static void main(String[] args) {
-		UseCase1.useCase1();;
+		System.out.println("Welcome to Tic-Toe-Game");
+		CreateBoard createboard = new CreateBoard();
 	}
 }
