@@ -7,6 +7,8 @@ public class CreateBoard {
 	private char board[] = new char[10];
 	private char player;
 	private char computer;
+	boolean playerFirst;
+	Random random = new Random();
 	Scanner scanner = new Scanner(System.in);
 
 	public CreateBoard() {
@@ -37,6 +39,20 @@ public class CreateBoard {
 
 		System.out.println("Player = " + player + "\nComputer = " + computer);
 	}
+	
+	public void toss() {
+		System.out.println("Select Your Choice\n1) Heads\t2) Tails");
+		int choice = scanner.nextInt();
+		int tossWin = random.nextInt(2) + 1;
+		if(tossWin == choice) {
+			System.out.println("You Won The Toss");
+			playerFirst = true;
+		} else {
+			System.out.println("Computer Won The Toss");
+			playerFirst = false;
+		}
+	}
+	
 
 	public void showBoard() {
 		for (int i = 1; i < board.length; i = i + 3) {
@@ -58,15 +74,36 @@ public class CreateBoard {
 	}
 
 	public void makeMove() {
-		System.out.println("Players Turn. Enter the position to Insert " + player);
-		int pos = scanner.nextInt();
-		if(pos<=0 || pos>9) {
-			System.out.println("Invalid Position");
-		} else if(board[pos] != ' ') {
-			System.out.println("Letter Already Exist is Position " + pos);
+		if(playerFirst) {
+			playerMove();
+			computerMove();
 		} else {
-			board[pos] = player;
-			showBoard();
+			computerMove();
+			playerMove();
 		}
+		
+	}
+	
+	public void playerMove() {
+		while(true) {
+			showBoard();
+			System.out.println("Players Turn. Enter the position to Insert " + player);
+			int pos = scanner.nextInt();
+			if(pos<=0 || pos>9) {
+				System.out.println("Invalid Position");
+			} else if(board[pos] != ' ') {
+				System.out.println("Letter Already Exist is Position " + pos);
+			} else {
+				board[pos] = player;
+				break;
+			}
+		}
+		
+	}
+	
+	public void computerMove() {
+		int randPos = random.nextInt(9) + 1;
+		board[randPos] = computer;
+		//showBoard();
 	}
 }
