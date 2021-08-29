@@ -3,7 +3,7 @@ package com.tictactoe;
 import java.util.*;
 
 public class CreateBoard {
-	
+
 	//All the required variable declared
 	private char board[] = new char[10];
 	private char playerLetter;
@@ -100,12 +100,7 @@ public class CreateBoard {
 				} else {
 					board[pos] = playerLetter;
 					filled += 1;
-					for(int j=0;j<=9-filled;j++) {
-						if(emptyField[j] == pos) {
-							emptyField[j] = emptyField[9-filled];
-						}
-					} 
-					checkBoard(playerLetter);
+					checkWinner(playerLetter);
 					break;
 				}
 			} else {
@@ -117,63 +112,143 @@ public class CreateBoard {
 	//Performs the Computer move
 	public void computerMove() {
 		if(filled<9 && !completed) {
-			int compArrayPos = random.nextInt(9-filled);
-			int compPos = emptyField[compArrayPos];
-			board[compPos] = computerLetter;
+
+			int countComputer = 0;
+			int emptyPos = 0;
+			boolean done = false;
+
+			//Checking for Row Completion
+			for(int i=1;i<=9;i=i+3) {
+				countComputer = 0;
+				for(int j=i;j<i+3;j++) {
+					if(board[j] == computerLetter) {
+						countComputer++;
+					} else {
+						emptyPos = j;
+					}
+				}
+				done = smartComputer(countComputer,emptyPos);
+				if(done == true) {
+					return;
+				}
+			}
+
+			//Checking for Column Completion
+			for(int i=1;i<=3;i++) {
+				countComputer = 0;
+				for(int j=i;j<=9;j=j+3) {
+					if(board[j] == computerLetter) {
+						countComputer++;
+					} else {
+						emptyPos = j;
+					}
+					done = smartComputer(countComputer,emptyPos);
+					if(done == true) {
+						return;
+					}
+				}
+			}
+
+			//Checking Diagonal Completion
+			countComputer = 0;
+			for(int i=1;i<=9;i=i+4) {
+				if(board[i] == computerLetter) {
+					countComputer++;
+				} else {
+					emptyPos = i;
+				}
+			}
+			done = smartComputer(countComputer,emptyPos);
+			if(done == true) {
+				return;
+			}
+
+			countComputer = 0;
+			for(int i=3;i<=7;i=i+2) {
+				if(board[i] == computerLetter) {
+					countComputer++;
+				} else {
+					emptyPos = i;
+				}
+			}
+			done = smartComputer(countComputer,emptyPos);
+			if(done == true) {
+				return;
+			}
+
+			//Default Move
+			if(filled < 6) {
+				while(true) {
+					int compPos = random.nextInt(9)+ 1;
+					if(board[compPos] == ' ') {
+						board[compPos] = computerLetter;
+						filled += 1;
+						checkWinner(computerLetter);
+						break;
+					}
+				}
+			} else {
+				for(int i=1;i<=9;i++) {
+					if(board[i] == ' ') {
+						board[i] = computerLetter;
+						filled += 1;
+						checkWinner(computerLetter);
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	public boolean smartComputer(int countComputer,int emptyPos) {
+		if(countComputer == 2 && board[emptyPos] == ' ') {
+			board[emptyPos] = computerLetter;
 			filled += 1;
-			emptyField[compArrayPos] = emptyField[9-filled];
-			checkBoard(computerLetter);
+			checkWinner(computerLetter);
+			return true;
+		} else {
+			return false;
 		}
 	}
 
 	//All the required possibilities to check for Win
-	public void checkBoard(char letter) {
-		int count = 0;
-		
-		//Checking for Row Completion
-		for(int i=1;i<=9;i=i+3) {
-			count = 0;
-			for(int j=0;j<3;j++) {
-				if(board[i+j] == letter) {
-					count++;
-				}
-			}
-			checkResult(count, letter);
-		}
+	public void checkWinner(char letter) {
+		String boardLetters = null;
+		String winLetters = "" + letter + letter + letter;
+		for(int i=1;i<=8;i++) {
 
-		//Checking for Column Completion
-		for(int i=1;i<=3;i++) {
-			count = 0;
-			for(int j=i;j<=9;j=j+3) {
-				if(board[j] == letter) {
-					count++;
-				}
-				checkResult(count, letter);
+			switch(i) {
+			case 1:
+				boardLetters = "" + board[1] + board[2] + board[3];
+				break;
+			case 2:
+				boardLetters = "" + board[4] + board[5] + board[6];
+				break;
+			case 3:
+				boardLetters = "" + board[7] + board[8] + board[9];
+				break;
+			case 4:
+				boardLetters = "" + board[1] + board[4] + board[7];
+				break;
+			case 5:
+				boardLetters = "" + board[2] + board[5] + board[8];
+				break;
+			case 6:
+				boardLetters = "" + board[3] + board[6] + board[9];
+				break;
+			case 7:
+				boardLetters = "" + board[1] + board[5] + board[9];
+				break;
+			case 8:
+				boardLetters = "" + board[3] + board[5] + board[7];
+				break;
 			}
-		}
+			if(boardLetters.equals(winLetters)) {
+				completed = true;
+				winnerLetter = letter;
+				break;
+			}
 
-		//Checking Diagonal Completion
-		count = 0;
-		for(int i=1;i<=9;i=i+4) {
-			if(board[i] == letter) {
-				count++;
-			}
-		}
-		checkResult(count, letter);
-		count = 0;
-		for(int i=3;i<=7;i=i+2) {
-			if(board[i] == letter) {
-				count++;
-			}
-		}
-		checkResult(count, letter);
-	}
-	
-	//Called for each winning possibility 
-	public void checkResult(int count, char letter) {
-		if(count == 3) {
-			completed = true;
-			winnerLetter = letter;
 		}
 	}
 
