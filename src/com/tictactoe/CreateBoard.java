@@ -100,6 +100,12 @@ public class CreateBoard {
 				} else {
 					board[pos] = playerLetter;
 					filled += 1;
+
+					for(int j=0;j<=9-filled;j++) {
+						if(emptyField[j] == pos) {
+							emptyField[j] = emptyField[9-filled];
+						}
+					} 
 					checkWinner(playerLetter);
 					break;
 				}
@@ -196,7 +202,53 @@ public class CreateBoard {
 						break;
 					}
 				}
+			int compArrayPos = random.nextInt(9-filled);
+			int compPos = emptyField[compArrayPos];
+			board[compPos] = computerLetter;
+			filled += 1;
+			emptyField[compArrayPos] = emptyField[9-filled];
+			checkWinner(computerLetter);
+		}
+	}
+
+	//All the required possibilities to check for Win
+	public void checkWinner(char letter) {
+		String boardLetters = null;
+		String winLetters = "" + letter + letter + letter;
+		for(int i=1;i<=8;i++) {
+			
+			switch(i) {
+			case 1:
+				boardLetters = "" + board[1] + board[2] + board[3];
+				break;
+			case 2:
+				boardLetters = "" + board[4] + board[5] + board[6];
+				break;
+			case 3:
+				boardLetters = "" + board[7] + board[8] + board[9];
+				break;
+			case 4:
+				boardLetters = "" + board[1] + board[4] + board[7];
+				break;
+			case 5:
+				boardLetters = "" + board[2] + board[5] + board[8];
+				break;
+			case 6:
+				boardLetters = "" + board[3] + board[6] + board[9];
+				break;
+			case 7:
+				boardLetters = "" + board[1] + board[5] + board[9];
+				break;
+			case 8:
+				boardLetters = "" + board[3] + board[5] + board[7];
+				break;
 			}
+			if(boardLetters.equals(winLetters)) {
+				completed = true;
+				winnerLetter = letter;
+				break;
+			}
+			
 		}
 	}
 
@@ -251,7 +303,7 @@ public class CreateBoard {
 
 		}
 	}
-
+    
 	//Specific message displayed while ending the Game
 	public void printResult() {
 		showBoard();
