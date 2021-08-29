@@ -4,7 +4,7 @@ import java.util.*;
 
 public class CreateBoard {
 
-	//All the required variable declared
+	// All the required variable declared
 	private char board[] = new char[10];
 	private char playerLetter;
 	private char computerLetter;
@@ -16,21 +16,21 @@ public class CreateBoard {
 	Random random = new Random();
 	Scanner scanner = new Scanner(System.in);
 
-	//A empty board is created
+	// A empty board is created
 	public CreateBoard() {
 		board[0] = '1';
-		for(int i=1;i<10;i++) {
+		for (int i = 1; i < 10; i++) {
 			board[i] = ' ';
 		}
 	}
 
-	//Allowing user to select a letter of his wish
+	// Allowing user to select a letter of his wish
 	public void userInput() {
-		//Ask User to Select Letter
+		// Ask User to Select Letter
 		System.out.println("Select Your Letter\n1) X\t2) O");
 		int choice = scanner.nextInt();
 
-		switch(choice) {
+		switch (choice) {
 		case 1:
 			playerLetter = 'X';
 			computerLetter = 'O';
@@ -48,13 +48,13 @@ public class CreateBoard {
 		System.out.println("Player = " + playerLetter + "\nComputer = " + computerLetter);
 	}
 
-	//Choosing who will start the game using a toss
+	// Choosing who will start the game using a toss
 	public void toss() {
-		//Ask User to Select Toss
+		// Ask User to Select Toss
 		System.out.println("Select Your Choice\n1) Heads\t2) Tails");
 		int choice = scanner.nextInt();
 		int tossWin = random.nextInt(2) + 1;
-		if(tossWin == choice) {
+		if (tossWin == choice) {
 			System.out.println("You Won The Toss");
 			playerFirst = true;
 		} else {
@@ -63,7 +63,7 @@ public class CreateBoard {
 		}
 	}
 
-	//Printing the board
+	// Printing the board
 	public void showBoard() {
 		System.out.println(" " + board[1] + " | " + board[2] + " | " + board[3]);
 		System.out.println(" ----------");
@@ -73,10 +73,10 @@ public class CreateBoard {
 
 	}
 
-	//The game loop allowing player and computer to play till the end
+	// The game loop allowing player and computer to play till the end
 	public void makeMove() {
-		while(filled<=8 && !completed) {
-			if(playerFirst) {
+		while (filled <= 8 && !completed) {
+			if (playerFirst) {
 				playerMove();
 				computerMove();
 			} else {
@@ -87,16 +87,16 @@ public class CreateBoard {
 		printResult();
 	}
 
-	//Performs the Player move
+	// Performs the Player move
 	public void playerMove() {
-		while(true) {
-			if(filled<9 && !completed) {
+		while (true) {
+			if (filled < 9 && !completed) {
 				showBoard();
 				System.out.println("Players Turn. Enter the position to Insert " + playerLetter);
 				int pos = scanner.nextInt();
-				if(pos<=0 || pos>9) {
+				if (pos <= 0 || pos > 9) {
 					System.out.println("Invalid Position");
-				} else if(board[pos] != ' ') {
+				} else if (board[pos] != ' ') {
 					System.out.println("Letter Already Exist is Position " + pos);
 				} else {
 					board[pos] = playerLetter;
@@ -110,106 +110,107 @@ public class CreateBoard {
 		}
 	}
 
-	//Performs the Computer move
+	// Performs the Computer move
 	public void computerMove() {
 
-		if(filled<9 && !completed) {
+		if (filled < 9 && !completed) {
 			tempPos = 0;
 			int countComputer = 0;
 			int countPlayer = 0;
 			int emptyPos = 0;
 			boolean done = false;
 
-			//Checking for Row Completion
-			for(int i=1;i<=9;i=i+3) {
+			// Checking for Row Completion
+			for (int i = 1; i <= 9; i = i + 3) {
 				countComputer = 0;
 				countPlayer = 0;
 				emptyPos = 0;
-				for(int j=i;j<i+3;j++) {
-					if(board[j] == computerLetter) {
+				for (int j = i; j < i + 3; j++) {
+					if (board[j] == computerLetter) {
 						countComputer++;
-					} else if(board[j] == playerLetter) {
+					} else if (board[j] == playerLetter) {
 						countPlayer++;
 					} else {
 						emptyPos = j;
 					}
 				}
-				done = smartComputer(countComputer,countPlayer,emptyPos);
-				if(done == true) {
+				done = smartComputer(countComputer, countPlayer, emptyPos);
+				if (done == true) {
 					return;
 				}
 			}
 
-			//Checking for Column Completion
-			for(int i=1;i<=3;i++) {
+			// Checking for Column Completion
+			for (int i = 1; i <= 3; i++) {
 				countComputer = 0;
 				countPlayer = 0;
 				emptyPos = 0;
-				for(int j=i;j<=9;j=j+3) {
-					if(board[j] == computerLetter) {
+				for (int j = i; j <= 9; j = j + 3) {
+					if (board[j] == computerLetter) {
 						countComputer++;
-					} else if(board[j] == playerLetter) {
+					} else if (board[j] == playerLetter) {
 						countPlayer++;
 					} else {
 						emptyPos = j;
 					}
-					done = smartComputer(countComputer,countPlayer,emptyPos);
-					if(done == true) {
+					done = smartComputer(countComputer, countPlayer, emptyPos);
+					if (done == true) {
 						return;
 					}
 				}
 			}
 
-			//Checking Diagonal Completion
+			// Checking Diagonal 1 Completion
 			countComputer = 0;
 			countPlayer = 0;
 			emptyPos = 0;
-			for(int i=1;i<=9;i=i+4) {
-				if(board[i] == computerLetter) {
+			for (int i = 1; i <= 9; i = i + 4) {
+				if (board[i] == computerLetter) {
 					countComputer++;
-				} else if(board[i] == playerLetter) {
+				} else if (board[i] == playerLetter) {
 					countPlayer++;
 				} else {
 					emptyPos = i;
 				}
 			}
-			done = smartComputer(countComputer,countPlayer,emptyPos);
-			if(done == true) {
+			done = smartComputer(countComputer, countPlayer, emptyPos);
+			if (done == true) {
 				return;
 			}
 
+			// Checking Diagonal 2 Completion
 			countComputer = 0;
 			countPlayer = 0;
 			emptyPos = 0;
-			for(int i=3;i<=7;i=i+2) {
-				if(board[i] == computerLetter) {
+			for (int i = 3; i <= 7; i = i + 2) {
+				if (board[i] == computerLetter) {
 					countComputer++;
-				} else if(board[i] == playerLetter) {
+				} else if (board[i] == playerLetter) {
 					countPlayer++;
 				} else {
 					emptyPos = i;
 				}
 			}
-			done = smartComputer(countComputer,countPlayer,emptyPos);
-			if(done == true) {
+			done = smartComputer(countComputer, countPlayer, emptyPos);
+			if (done == true) {
 				return;
 			}
 
-			//Blocking Player from Winning
-			if(tempPos != 0) {
+			// Blocking Player from Winning
+			if (tempPos != 0) {
 				board[tempPos] = computerLetter;
 				filled += 1;
 				checkWinner(computerLetter);
 				return;
 			}
 
-			//Default Moves
-			//Corners - 1,3,7,9
-			//Centre - 5
-			//Remaining - 2,4,6,8
-			int priority[] = {1,3,7,9,5,2,4,6,8};
-			for(int i: priority) {
-				if(board[i] == ' ') {
+			// Default Moves
+			// Corners - 1,3,7,9
+			// Centre - 5
+			// Remaining - 2,4,6,8
+			int priority[] = { 1, 3, 7, 9, 5, 2, 4, 6, 8 };
+			for (int i : priority) {
+				if (board[i] == ' ') {
 					board[i] = computerLetter;
 					filled += 1;
 					checkWinner(computerLetter);
@@ -220,14 +221,13 @@ public class CreateBoard {
 	}
 
 	// Finding the best position to make the next move
-	public boolean smartComputer(int countComputer,int countPlayer,int emptyPos) {
-		if(countComputer == 2 && board[emptyPos] == ' ') {
+	public boolean smartComputer(int countComputer, int countPlayer, int emptyPos) {
+		if (countComputer == 2 && board[emptyPos] == ' ') {
 			board[emptyPos] = computerLetter;
 			filled += 1;
 			checkWinner(computerLetter);
 			return true;
-		} else if(countPlayer == 2 && board[emptyPos] == ' ') {
-			System.out.println(tempPos);
+		} else if (countPlayer == 2 && board[emptyPos] == ' ') {
 			tempPos = emptyPos;
 			return false;
 		} else {
@@ -235,13 +235,13 @@ public class CreateBoard {
 		}
 	}
 
-	//All the required possibilities to check for Win
+	// All the required possibilities to check for Win
 	public void checkWinner(char letter) {
 		String boardLetters = null;
 		String winLetters = "" + letter + letter + letter;
-		for(int i=1;i<=8;i++) {
+		for (int i = 1; i <= 8; i++) {
 
-			switch(i) {
+			switch (i) {
 			case 1:
 				boardLetters = "" + board[1] + board[2] + board[3];
 				break;
@@ -267,20 +267,19 @@ public class CreateBoard {
 				boardLetters = "" + board[3] + board[5] + board[7];
 				break;
 			}
-			if(boardLetters.equals(winLetters)) {
+			if (boardLetters.equals(winLetters)) {
 				completed = true;
 				winnerLetter = letter;
 				break;
 			}
-
 		}
 	}
 
-	//Specific message displayed while ending the Game
+	// Specific message displayed while ending the Game
 	public void printResult() {
 		showBoard();
-		if(completed == true) {
-			if(winnerLetter == playerLetter) {
+		if (completed == true) {
+			if (winnerLetter == playerLetter) {
 				System.out.println("You have Won the Game");
 			} else {
 				System.out.println("Computer has Won the Game");
