@@ -105,7 +105,7 @@ public class CreateBoard {
 							emptyField[j] = emptyField[9-filled];
 						}
 					} 
-					checkBoard(playerLetter);
+					checkWinner(playerLetter);
 					break;
 				}
 			} else {
@@ -122,61 +122,51 @@ public class CreateBoard {
 			board[compPos] = computerLetter;
 			filled += 1;
 			emptyField[compArrayPos] = emptyField[9-filled];
-			checkBoard(computerLetter);
+			checkWinner(computerLetter);
 		}
 	}
 
 	//All the required possibilities to check for Win
-	public void checkBoard(char letter) {
-		int count = 0;
-		
-		//Checking for Row Completion
-		for(int i=1;i<=9;i=i+3) {
-			count = 0;
-			for(int j=0;j<3;j++) {
-				if(board[i+j] == letter) {
-					count++;
-				}
+	public void checkWinner(char letter) {
+		String boardLetters = null;
+		String winLetters = "" + letter + letter + letter;
+		for(int i=1;i<=8;i++) {
+			
+			switch(i) {
+			case 1:
+				boardLetters = "" + board[1] + board[2] + board[3];
+				break;
+			case 2:
+				boardLetters = "" + board[4] + board[5] + board[6];
+				break;
+			case 3:
+				boardLetters = "" + board[7] + board[8] + board[9];
+				break;
+			case 4:
+				boardLetters = "" + board[1] + board[4] + board[7];
+				break;
+			case 5:
+				boardLetters = "" + board[2] + board[5] + board[8];
+				break;
+			case 6:
+				boardLetters = "" + board[3] + board[6] + board[9];
+				break;
+			case 7:
+				boardLetters = "" + board[1] + board[5] + board[9];
+				break;
+			case 8:
+				boardLetters = "" + board[3] + board[5] + board[7];
+				break;
 			}
-			checkResult(count, letter);
-		}
-
-		//Checking for Column Completion
-		for(int i=1;i<=3;i++) {
-			count = 0;
-			for(int j=i;j<=9;j=j+3) {
-				if(board[j] == letter) {
-					count++;
-				}
-				checkResult(count, letter);
+			if(boardLetters.equals(winLetters)) {
+				completed = true;
+				winnerLetter = letter;
+				break;
 			}
+			
 		}
-
-		//Checking Diagonal Completion
-		count = 0;
-		for(int i=1;i<=9;i=i+4) {
-			if(board[i] == letter) {
-				count++;
-			}
-		}
-		checkResult(count, letter);
-		count = 0;
-		for(int i=3;i<=7;i=i+2) {
-			if(board[i] == letter) {
-				count++;
-			}
-		}
-		checkResult(count, letter);
 	}
 	
-	//Called for each winning possibility 
-	public void checkResult(int count, char letter) {
-		if(count == 3) {
-			completed = true;
-			winnerLetter = letter;
-		}
-	}
-
 	//Specific message displayed while ending the Game
 	public void printResult() {
 		showBoard();
