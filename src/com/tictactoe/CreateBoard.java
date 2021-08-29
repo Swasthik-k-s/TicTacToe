@@ -112,6 +112,7 @@ public class CreateBoard {
 
 	//Performs the Computer move
 	public void computerMove() {
+
 		if(filled<9 && !completed) {
 			tempPos = 0;
 			int countComputer = 0;
@@ -203,23 +204,16 @@ public class CreateBoard {
 			}
 
 			//Default Moves
-			//Corner Moves
-			int corner[] = {1,3,7,9};
-			for(int i: corner) {
+			//Corners - 1,3,7,9
+			//Centre - 5
+			//Remaining - 2,4,6,8
+			int priority[] = {1,3,7,9,5,2,4,6,8};
+			for(int i: priority) {
 				if(board[i] == ' ') {
 					board[i] = computerLetter;
 					filled += 1;
 					checkWinner(computerLetter);
 					return;
-				}
-			}
-
-			for(int i=1;i<=9;i++) {
-				if(board[i] == ' ') {
-					board[i] = computerLetter;
-					filled += 1;
-					checkWinner(computerLetter);
-					break;
 				}
 			}
 		}
