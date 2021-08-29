@@ -10,9 +10,9 @@ public class CreateBoard {
 	private char computerLetter;
 	char winnerLetter;
 	boolean playerFirst;
+	int tempPos = 0;
 	boolean completed = false;
 	int filled = 0;
-	int[] emptyField = {1,2,3,4,5,6,7,8,9};
 	Random random = new Random();
 	Scanner scanner = new Scanner(System.in);
 
@@ -112,22 +112,26 @@ public class CreateBoard {
 	//Performs the Computer move
 	public void computerMove() {
 		if(filled<9 && !completed) {
-
+			tempPos = 0;
 			int countComputer = 0;
+			int countPlayer = 0;
 			int emptyPos = 0;
 			boolean done = false;
 
 			//Checking for Row Completion
 			for(int i=1;i<=9;i=i+3) {
 				countComputer = 0;
+				countPlayer = 0;
 				for(int j=i;j<i+3;j++) {
 					if(board[j] == computerLetter) {
 						countComputer++;
+					} else if(board[j] == playerLetter) {
+						countPlayer++;
 					} else {
 						emptyPos = j;
 					}
 				}
-				done = smartComputer(countComputer,emptyPos);
+				done = smartComputer(countComputer,countPlayer,emptyPos);
 				if(done == true) {
 					return;
 				}
@@ -136,13 +140,16 @@ public class CreateBoard {
 			//Checking for Column Completion
 			for(int i=1;i<=3;i++) {
 				countComputer = 0;
+				countPlayer = 0;
 				for(int j=i;j<=9;j=j+3) {
 					if(board[j] == computerLetter) {
 						countComputer++;
+					} else if(board[j] == playerLetter) {
+						countPlayer++;
 					} else {
 						emptyPos = j;
 					}
-					done = smartComputer(countComputer,emptyPos);
+					done = smartComputer(countComputer,countPlayer,emptyPos);
 					if(done == true) {
 						return;
 					}
@@ -151,28 +158,42 @@ public class CreateBoard {
 
 			//Checking Diagonal Completion
 			countComputer = 0;
+			countPlayer = 0;
 			for(int i=1;i<=9;i=i+4) {
 				if(board[i] == computerLetter) {
 					countComputer++;
+				} else if(board[i] == playerLetter) {
+					countPlayer++;
 				} else {
 					emptyPos = i;
 				}
 			}
-			done = smartComputer(countComputer,emptyPos);
+			done = smartComputer(countComputer,countPlayer,emptyPos);
 			if(done == true) {
 				return;
 			}
 
 			countComputer = 0;
+			countPlayer = 0;
 			for(int i=3;i<=7;i=i+2) {
 				if(board[i] == computerLetter) {
 					countComputer++;
+				} else if(board[i] == playerLetter) {
+					countPlayer++;
 				} else {
 					emptyPos = i;
 				}
 			}
-			done = smartComputer(countComputer,emptyPos);
+			done = smartComputer(countComputer,countPlayer,emptyPos);
 			if(done == true) {
+				return;
+			}
+			
+			//Blocking Player from Winning
+			if(tempPos != 0) {
+				board[tempPos] = computerLetter;
+				filled += 1;
+				checkWinner(computerLetter);
 				return;
 			}
 
@@ -200,12 +221,16 @@ public class CreateBoard {
 		}
 	}
 
-	public boolean smartComputer(int countComputer,int emptyPos) {
+	// Finding the best position to make the next move
+	public boolean smartComputer(int countComputer,int countPlayer,int emptyPos) {
 		if(countComputer == 2 && board[emptyPos] == ' ') {
 			board[emptyPos] = computerLetter;
 			filled += 1;
 			checkWinner(computerLetter);
 			return true;
+		} else if(countPlayer == 2 && board[emptyPos] == ' ') {
+			tempPos = emptyPos;
+			return false;
 		} else {
 			return false;
 		}
